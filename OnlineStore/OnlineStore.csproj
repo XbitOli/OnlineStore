@@ -41,6 +41,8 @@
     <ItemGroup>
         <Compile Include="Cart.cs" />
         <Compile Include="Good.cs" />
+        <Compile Include="Interfaces\IItemAvailable.cs" />
+        <Compile Include="Interfaces\IItemTakeable.cs" />
         <Compile Include="Interfaces\IShowable.cs" />
         <Compile Include="OnlineStore_Task.cs" />
         <Compile Include="Order.cs" />

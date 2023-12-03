@@ -3,13 +3,10 @@ using System.Collections.Generic;
 
 namespace OnlineStore
 {
-    public class Warehouse : IShowable 
+    public class Warehouse : IShowable, IItemTakeable
     {
-        private Dictionary<Good, int> _goods = new Dictionary<Good, int>() { };
+        private readonly Dictionary<Good, int> _goods = new Dictionary<Good, int>();
         
-        public Warehouse()
-        { }
-
         public void Delive(Good good, int amount)
         {
             if (amount < 0)
@@ -18,17 +15,17 @@ namespace OnlineStore
             if (good == null)
                 throw new ArgumentNullException("Argument is null", nameof(good));
 
-            if (_goods.ContainsKey(good))
-                _goods[good] += amount;
+            if (_goods.ContainsKey(good) == false)
+                _goods[good] = amount;
             else
-                _goods.Add(good, amount);
+                _goods[good] += amount;
 
             ShowMessage($"Товар [{good}] {amount} шт. доставлен");
         }
 
         public bool IsAvailable(Good good, int amount)
         {
-            if (!_goods.ContainsKey(good))
+            if (_goods.ContainsKey(good) == false)
             {
                 ShowMessage("Такого товара нет не складе");
                 return false;
@@ -50,6 +47,15 @@ namespace OnlineStore
 
         public void Remove(Good good, int amount)
         {
+            if (good == null)
+                throw new ArgumentNullException("Argument is null", nameof(good));
+
+            if (amount <= 0)
+                throw new ArgumentException("Argument must be more than 0", nameof(amount));
+
+            if (_goods.ContainsKey(good) == false)
+                throw new ArgumentException("There is no such good", nameof(good));
+            
             _goods[good] -= amount;
         }
         
@@ -67,7 +73,7 @@ namespace OnlineStore
             {
                 foreach (var good in _goods)
                 {
-                    string goodInfo =$"Товар {good} Количество:{ good.Value }";
+                    string goodInfo =$"Товар {good.Key} Количество:{ good.Value }";
                     ShowMessage(goodInfo);
                 }
             }

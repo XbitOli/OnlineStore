@@ -9,10 +9,7 @@ namespace OnlineStore
 
         public Shop(Warehouse warehouse)
         {
-            if (warehouse == null)
-                throw new ArgumentNullException("Argument is null", nameof(warehouse));
-            
-            _warehouse = warehouse;
+            _warehouse = warehouse ?? throw new ArgumentNullException("Argument is null", nameof(warehouse));
             _cart = new Cart(_warehouse);
         }
 

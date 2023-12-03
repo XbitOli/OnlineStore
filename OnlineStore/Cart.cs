@@ -5,14 +5,11 @@ namespace OnlineStore
 {
     public class Cart : IShowable
     {
-        private readonly Warehouse _warehouse;
-        private Dictionary<Good, int> _cartGoods = new Dictionary<Good, int>() { };
-        public Cart(Warehouse warehouse)
+        private readonly IItemTakeable _storage;
+        private readonly Dictionary<Good, int> _cartGoods = new Dictionary<Good, int>();
+        public Cart(IItemTakeable warehouse)
         {
-            if (warehouse == null)
-                throw new ArgumentNullException("Argument is null", nameof(warehouse));
-            
-            _warehouse = warehouse;
+            _storage = warehouse ?? throw new ArgumentNullException("Argument is null", nameof(warehouse));
         }
 
         public void Add(Good good, int amount)
@@ -20,17 +17,20 @@ namespace OnlineStore
             if (good == null)
                 throw new ArgumentNullException("Argument is null", nameof(good));
             
-            if (_warehouse.IsAvailable(good, amount))
+            if (_storage.IsAvailable(good, amount) == false)
+            {
+                string errorMessage =
+                    $"Невозможно добавить {good} ({amount}) шт.: Отсутствует в таком количестве на складе";
+                
+                ShowMessage(errorMessage);
+            }
+            else
             {
                 string goodInfo = $"Товар {good} ({amount}) шт.: Добавлен в корзину";
                 
                 _cartGoods.Add(good, amount);
                 
                 ShowMessage(goodInfo);
-            }
-            else
-            {
-                ShowMessage($"Невозможно добавить {good} ({amount}) шт.: Отсутствует в таком количестве на складе");
             }
         }
 
@@ -72,7 +72,7 @@ namespace OnlineStore
         {
             foreach (var cartGood in _cartGoods)
             {
-                _warehouse.Remove(cartGood.Key, cartGood.Value);
+                _storage.Remove(cartGood.Key, cartGood.Value);
             }
             
             _cartGoods.Clear();
