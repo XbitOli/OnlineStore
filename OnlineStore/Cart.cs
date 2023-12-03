@@ -7,9 +7,9 @@ namespace OnlineStore
     {
         private readonly IItemTakeable _storage;
         private readonly Dictionary<Good, int> _cartGoods = new Dictionary<Good, int>();
-        public Cart(IItemTakeable warehouse)
+        public Cart(IItemTakeable storage)
         {
-            _storage = warehouse ?? throw new ArgumentNullException("Argument is null", nameof(warehouse));
+            _storage = storage ?? throw new ArgumentNullException("Argument is null", nameof(storage));
         }
 
         public void Add(Good good, int amount)
@@ -20,7 +20,7 @@ namespace OnlineStore
             if (_storage.IsAvailable(good, amount) == false)
             {
                 string errorMessage =
-                    $"Невозможно добавить {good} ({amount}) шт.: Отсутствует в таком количестве на складе";
+                    $"Невозможно добавить {good} ({amount}) шт.";
                 
                 ShowMessage(errorMessage);
             }

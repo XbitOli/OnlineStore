@@ -31,7 +31,7 @@ namespace OnlineStore
                 return false;
             }
 
-            if (amount == 0)
+            if (amount <= 0)
             {
                 ShowMessage("Количество покупаемых предметов должно быть больше 0");
                 return false;
@@ -54,7 +54,7 @@ namespace OnlineStore
                 throw new ArgumentException("Argument must be more than 0", nameof(amount));
 
             if (_goods.ContainsKey(good) == false)
-                throw new ArgumentException("There is no such good", nameof(good));
+                throw new ArgumentException("There is no such product", nameof(good));
             
             _goods[good] -= amount;
         }
